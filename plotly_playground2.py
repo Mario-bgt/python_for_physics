@@ -10,8 +10,8 @@ n = 0.6
 g = 9.81
 
 # def y
-y = (m*g*n)/(np.cos(x)+np.sin(x)*n)
-y2 = (m*g*n)/(np.cos(x2)+np.sin(x2)*n)
+y = (m*g*n)/(np.cos(x))
+y2 = (m*g*n)/(np.cos(x2))
 
 # def x ticks as angles in radians
 tickx = [0, np.pi*10/180, np.pi*20/180, np.pi*30/180, np.pi*40/180, np.pi*50/180, np.pi*60/180, np.pi/3]
