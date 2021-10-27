@@ -32,4 +32,4 @@ fig.add_trace(go.Scatter(
     ),
     marker=dict(color='purple', size=8)
 ))
-fig.write_html("test.html")
+fig.write_html("plotly.html")

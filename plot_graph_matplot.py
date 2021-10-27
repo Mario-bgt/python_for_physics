@@ -25,4 +25,5 @@ plt.title('Example graph for error calculus')
 plt.tick_params(bottom=False, left=False)
 
 plt.legend(loc='lower right')
-plt.savefig('test.pdf')
+plt.savefig('matplotlib.pdf')
+plt.show()
