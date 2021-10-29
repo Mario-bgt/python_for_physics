@@ -10,10 +10,10 @@ def T(n):
 
 
 # natural numbers from 0 to 951
-x = np.linspace(0, 950, 951)
+x = np.linspace(0, 30, 31)
 
 # calc all values for y
-y = [T(i) for i in range(0, 951)]
+y = [T(i) for i in range(0, 31)]
 
 # finally plot graph
 fig = plt.figure()
