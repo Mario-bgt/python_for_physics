@@ -9,7 +9,7 @@ def T(n):
         return np.sqrt(1 + T(n-1))
 
 
-# natural numbers from 0 to 951
+# natural numbers from 0 to 30
 x = np.linspace(0, 30, 31)
 
 # calc all values for y
