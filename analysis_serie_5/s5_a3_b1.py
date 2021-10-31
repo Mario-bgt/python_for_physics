@@ -9,10 +9,10 @@ x = np.linspace(0, 40, 41)
 # y = (np.sqrt(x+np.sqrt(x))-np.sqrt(x))
 #y = (np.power(-2, x)/(np.power(x, 2)+1))
 #y = ((1+np.power(-1, x))*((x+1)/(x))+np.power(-1, x))
-y = (scipy.special.factorial(x)/np.power(x, x))
+#y = (scipy.special.factorial(x)/np.power(x, x))
 #y = ((np.power(-1, x)*(x+(2/x)-np.sqrt(np.power(x, x)+4*x))))
 #y = (np.power(-2, x)/(np.power(x,x)+1))
-#y = ((x-1)/(np.power(x,x)+1)+2)
+y = ((x-1)/(np.power(x,x)+1)+2)
 
 # setting the axes at the centre
 fig = plt.figure()
