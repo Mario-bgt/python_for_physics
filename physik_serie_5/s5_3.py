@@ -23,7 +23,6 @@ plt.plot(x, b, linewidth=0.5, color="black")
 plt.plot(x, c, linewidth=0.5, color="black")
 plt.tick_params(bottom=False, left=False)
 plt.title('Fn(winkel)')
-plt.savefig('s6_a2_a.pdf')
+plt.savefig('s5_3.pdf')
 print(y)
 plt.show()
-
