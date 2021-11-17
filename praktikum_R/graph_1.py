@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib
+#scipy.optimize.curve_fit
 
 matplotlib.rcParams['text.usetex'] = True
 import matplotlib.pyplot as plt
