@@ -69,32 +69,32 @@ error = np.sqrt((1 / (y * (y - 1))) * error)
 # print('Der Fehler auf P_end ist gleich '+str(2*error))
 
 T = 630
-tau = -2846.939075
+tau = 2857.142857
 r = 0.047
 d = 0.050
 S = 0.179
 M = 1.5
 L = 5.38
 m_t = 15.159
-m_tau = 21.442
+m_tau = 59.86703102
 m_S = 0.00799
+m_r = 0.0004
 temp = ((4 * np.pi ** 2) / T ** 2) + (1 / tau ** 2)
 G = (temp * (r ** 2) * d * S) / (4 * M * L)
 print('G is equal to ' + str(G))
-
-mt = (-(((2*np.pi**2)*d*S)/(4*L*M*(T**3)))*m_t)**2
+gtemp = G
+mt = (-(((2*np.pi**2)*d*(r**2)*S)/(L*M*(T**3)))*m_t)**2
 print('Der Fehler auf T ist '+str(mt))
 mtau = (-((d*(r**2)*S)/(4*L*M*(tau**2)))*m_tau)**2
 print('Der Fehler auf Tau ist gleich: '+str(mtau))
 ms = (((4*(np.pi**4)*d*(r**2)*tau+d*(r**2)*(T**2))/(4*L*M*(T**2)*tau))*m_S)**2
 print('Der Fehler auf S ist gleich: '+str(ms))
-print(mt+mtau+ms)
-print('Der gesammte Fehler auf G ist gleich: '+str(np.sqrt(ms+mtau+mt)))
-
-
+mr = ((((4*(np.pi**2))*(tau**2)*d*r*S+d*r*S*(T**2))/(2*(tau**2)*L*M*(T**2)))*m_r)**2
+print('Der Fehler auf r ist gleich: '+str(mr))
+print('Der gesammte Fehler auf G ist gleich: '+str(np.sqrt(ms+mtau+mt+mr)))
 
 G = 6.6742 * (10 ** (-11))
-
+print(G-gtemp)
 temp = (4 * G * M * L) / ((r ** 2) * d * S) - (4 * np.pi ** 2) / (T ** 2)
 tau = 1 / (np.sqrt(temp))
-print('Tau is equal to ' + str(tau))
+print('Tau should be equal to ' + str(tau))
