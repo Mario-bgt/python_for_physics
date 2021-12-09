@@ -133,8 +133,6 @@ plt.plot(x, y, 'r', linewidth=0.5, linestyle='--', label=r'$f(\varphi_2)=\sin^{-
 plt.errorbar(x=x1, y=y1, yerr=yerr, fmt='.k', elinewidth=0.5, markersize=0.5, capsize=1, color="black",label=r'$\varphi_2\:measured$')
 plt.ylabel(r'$\varphi_2\:(rad)$')
 plt.xlabel(r'$z_0\:(cm)$')
-plt.title(r'$scattering\:angle\:\varphi_2\:as\:a\:function\:of\:the\:impact\:parameter\:z_0$')
 plt.grid(color='k', linestyle='--', linewidth=0.2)
 plt.legend(loc='upper left')
-plt.savefig('graph_1.pdf')
 plt.show()

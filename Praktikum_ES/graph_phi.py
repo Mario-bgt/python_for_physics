@@ -14,8 +14,6 @@ plt.plot(x, y, 'k', linewidth=0.5, linestyle='--', label=r'$f(\varphi_2)=\sin^{-
 
 plt.ylabel(r'$\varphi_2\:(rad)$')
 plt.xlabel(r'$z_0\:(cm)$')
-plt.title(r'$scattering\:angle\:\varphi_2\:as\:a\:function\:of\:the\:impact\:parameter\:z_0$')
 plt.grid(color='k', linestyle='--', linewidth=0.2)
 plt.legend(loc='upper left')
-plt.savefig('graph_1.pdf')
 plt.show()
