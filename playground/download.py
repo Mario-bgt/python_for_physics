@@ -3,7 +3,7 @@ import requests
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 
-url = "https://www.rapidtables.com"
+url = "https://metaphor.ethz.ch/x/2021/hs/401-1151-00L/"
 
 #If there is no such folder, the script will create one automatically
 folder_location = 'webscraping'
