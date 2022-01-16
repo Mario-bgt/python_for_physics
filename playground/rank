@@ -1,0 +1,615 @@
+os.loadAPI('gui')
+gui.wrap()
+
+shown = 1
+totalScreen = true
+totalPage = 1
+automate = false
+allOn = true
+allCoil = true
+selfAuto = false
+
+bigReactor = {
+	name="",
+	rawName="",
+	isTurbine = false,
+	isAutomated = false,
+	num = 0,
+	new = function(self,o)
+		o = o or {}
+		setmetatable(o,self)
+		self.__index = self
+		return o
+	end,
+	doc = function(self)
+		local returnString = "The bigReactor multiblock has the following variables:"
+		for k,v in pairs(self.__index) do
+			returnString = returnString.."\n"..k..": "..type(v)
+		end
+		for k,v in pairs(self) do
+			returnString = returnString.."\n"..k..": "..type(v)
+		end
+		return returnString
+	end,
+	toString = function(self)
+		local returnString = ""
+		for k,v in pairs(self.__index) do
+			if type(v) ~= "function" then
+				returnString = returnString.."\n"..k..": "..tostring(v)
+			end
+		end
+		return returnString
+	end,
+	setActive = function(self, a)
+		a = a or not peripheral.call(self.rawName, 'getActive')
+		peripheral.call(self.rawName, 'setActive', a)
+		return a
+	end,
+	getLastTick = function(self)
+		if self.isTurbine then
+			return peripheral.call(self.rawName, 'getEnergyProducedLastTick')
+		else
+			if self.isActivelyCooled then
+				return peripheral.call(self.rawName, 'getHotFluidProducedLastTick')
+			else
+				return peripheral.call(self.rawName, 'getEnergyProducedLastTick')
+			end
+		end
+	end,
+	getStored = function(self)
+		if not self.isTurbine and self.isActivelyCooled then
+			return peripheral.call(self.rawName, 'getInputAmount')
+		else
+			return peripheral.call(self.rawName, 'getEnergyStored')
+		end
+	end,
+	setName = function(self, a)
+		a = a or self.rawName
+		self.name = a
+		return a 
+	end,
+	getActive = function(self)
+		return peripheral.call(self.rawName, 'getActive')
+	end,
+	getMaxStore = function(self)
+	if not self.isTurbine and self.isActivelyCooled then
+			return 4000
+		else
+			return 10000000
+		end
+	end,
+	baseScreen = function(self)
+		local prodtxt = "Energy"
+		local measurement = " RF/t"
+		local measure = " RF"
+		if not self.isTurbine then
+			if self:getActivelyCooled() then
+				prodtxt = "Steam"
+				measurement = " mb/t"
+				measure = ' mb'
+			end
+		end
+
+		local p = 0
+		local tot = 0
+		for k,v in ipairs(table) do
+			p = p + peripheral.call(v.rawName, 'getEnergyStored')
+			tot = tot + 1000000
+		end
+
+		local monX, monY = gui.getSize()
+		return {
+				gui.header:new{text=self.name},
+				gui.bar:new{x=2,y=5,w=2,size=math.floor(monX/2)-3,current=self:getStored(), max=self:getMaxStore(), bColor=colors.gray, fColor=colors.orange,use=false},
+				gui.bar:new{x=2,y=6,w=2,size=math.floor(monX/2)-3,current=self:getStored(), max=self:getMaxStore(), bColor=colors.gray, fColor=colors.orange,use=false},
+				gui.label:new{text=self.name, x=11,y=8,bColor=colors.black},
+				gui.button:new{text="Active", x=13,y=15,w=16,h=3,func=function() self:setActive() end, active=self:getActive()},
+				gui.button:new{text="<",mode='flash',x=2,y=8,w=3,h=1,func=pageDown},
+				gui.button:new{text=">",mode='flash',x=26,y=8,w=3,h=1,func=pageUp},
+				gui.label:new{x=2,y=10,text=self.name,bColor=colors.black,fColor=colors.white},
+				gui.button:new{x=13,y=11,w=16,h=3,text="Show Total",func=function() totalScreen = true saveBaseSetting() end},
+				gui.button:new{x=30,y=8,text="Automate",w=math.floor(monX/2)+1,h=3,func=function() automate=true end,active=automate},
+				gui.label:new{x=2,y=3,text='Stored: ',bColor=colors.black},
+				gui.label:new{x=2 + string.len('Stored: '),y=3,text=numToString(self:getStored())..measure,bColor=colors.black,fColor=colors.white},
+				gui.label:new{x=2,y=4,text="Produced: ",bColor=colors.black},
+				gui.label:new{x=2 + string.len('Produced: '),y=4,text=numToString(math.floor(self:getLastTick()+0.5))..measurement,bColor=colors.black,fColor=colors.white}
+			}
+	end
+}
+
+reactor = bigReactor:new{
+	optRodLevel = 0,
+	getActivelyCooled = function(self)
+		return peripheral.call(self.rawName, 'isActivelyCooled')
+	end,
+	getTemp = function(self)
+		local caseTemp=peripheral.call(self.rawName, "getCasingTemperature")
+		local coreTemp=peripheral.call(self.rawName, "getFuelTemperature")
+		return caseTemp, coreTemp
+	end,
+	setRodLevel = function(self, a)
+		a = a or 0
+		peripheral.call(self.rawName, 'setAllControlRodLevels', a)
+		return a
+	end,
+	getRodLevel = function(self)
+		return peripheral.call(self.rawName, 'getControlRodLevel', 0)
+	end,
+	getFuel = function(self)
+		local fuel = peripheral.call(self.rawName, 'getFuelAmount')
+		local waste = peripheral.call(self.rawName, 'getWasteAmount')
+		local use = peripheral.call(self.rawName, 'getFuelConsumedLastTick')
+		return fuel, waste, use
+	end,
+	getReactivity = function(self)
+		return peripheral.call(self.rawName, 'getFuelReactivity')
+	end,
+	automate = function(self, steamLevel)
+		steamLevel = steamLevel or 2000
+		if self:getActivelyCooled() then
+			gui.clear()
+			local lblInfo = gui.label:new{bColor=colors.black, fColor=colors.black}
+			local lblMeasure = gui.label:new{bColor=colors.black, fColor=colors.black}
+			local monX, monY = gui.getSize()
+			local header = gui.header:new{text='Automating '..self.name}
+			local lblChecks = gui.label:new{bColor=colors.black, fColor=colors.black}
+			header:draw()
+
+			while peripheral.call(self.rawName, 'getFuelTemperature') > 100 do --Cool down
+				lblInfo = gui.label:new{x=2,y=3,text="Waiting for reactor to cool down",bColor=colors.black}
+				lblInfo:draw()
+				lblMeasure = gui.label:new{x=2,y=4,text=math.floor(peripheral.call(self.rawName, 'getFuelTemperature'))..'C / 100 C',bColor=colors.black,fColor=colors.white}
+				lblMeasure:draw()
+				peripheral.call(self.rawName, 'setActive', false)
+				sleep(1)
+			end
+			lblInfo:clear()
+			lblMeasure:clear()
+
+			while peripheral.call(self.rawName, 'getFuelTemperature') < 99 do--Heat up
+				lblInfo = gui.label:new{x=2,y=3,text="Waiting for reactor to heat up",bColor=colors.black}
+				lblInfo:draw()
+				lblMeasure = gui.label:new{x=2,y=4,text=math.floor(peripheral.call(self.rawName, 'getFuelTemperature'))..' C / 100 C',bColor=colors.black,fColor=colors.white}
+				lblMeasure:draw()
+				self:setRodLevel(99)
+				self:setActive(true)
+				sleep(1)
+				_, temp = self:getTemp()
+			end
+			lblInfo:clear()
+			lblMeasure:clear()
+
+			self:setRodLevel(99)
+			self:setActive(true)
+			sleep(5)
+			local tempMB = 0
+			local tempRodLevel = 0
+			local checks = 10
+			local tempMBarr = {}
+			for i = 1, checks do
+				local last = self:getLastTick()
+				lblInfo = gui.label:new{x=2,y=3,text="Checking steam output at 99% insertion",bColor=colors.black}
+				lblInfo:draw()
+				lblMeasure = gui.label:new{x=2,y=4,text=math.floor(last)..' mb/t',bColor=colors.black, fColor=colors.white}
+				lblMeasure:draw()
+				lblChecks = gui.label:new{x=2,y=5,text='Check '..i..' of '..checks,bColor=colors.black,fColor=colors.white}
+				lblChecks:draw()
+				table.insert(tempMBarr, last)
+				sleep(1)
+			end
+			lblChecks:clear()
+			for k,v in ipairs(tempMBarr) do
+				tempMB = tempMB + v
+			end
+			tempMB = (tempMB / #tempMBarr)
+			tempRodLevel = math.floor(steamLevel/tempMB)
+			tempRodLevel = (100-tempRodLevel)
+			if tempRodLevel < 0 then
+				self:setRodLevel(0)
+			else
+				self:setRodLevel(tempRodLevel)
+			end
+			lblInfo:clear()
+			lblMeasure:clear()
+			self.optRodLevel = tempRodLevel
+			self.isAutomated = true
+			local file = fs.open(self.rawName, 'w')
+			file.writeLine(math.floor(self.optRodLevel)..' ')
+			file.close()
+		end
+	end,
+	screen = function(self)
+		local screen = self:baseScreen() or {}
+		local monX, monY = gui.getSize()
+		local caseTemp, coreTemp = self:getTemp()
+		table.insert(screen, gui.label:new{x=math.floor(monX/2),y=3,fColor=colors.orange,bColor=colors.black,text="Case Temperature:"})	
+		table.insert(screen, gui.label:new{x=math.floor(monX/2)+18,y=3,fColor=colors.white,bColor=colors.black,text=math.floor(caseTemp).." C"})
+		table.insert(screen, gui.label:new{x=math.floor(monX/2),y=4,fColor=colors.orange,bColor=colors.black,text="Core Temperature:"})	
+		table.insert(screen, gui.label:new{x=math.floor(monX/2)+18,y=4,fColor=colors.white,bColor=colors.black,text=math.floor(coreTemp).." C"})
+		local maxHeat = 2058
+		if coreTemp > 2058 then
+			maxHeat = coreTemp
+		end
+		table.insert(screen, gui.bar:new{x=math.floor(monX/2),y=5,w=2,size=math.floor(monX/2)+1,current=coreTemp, max=maxHeat, bColor=colors.gray, fColor=colors.orange,use=false})
+		table.insert(screen, gui.bar:new{x=math.floor(monX/2),y=6,w=2,size=math.floor(monX/2)+1,current=coreTemp, max=maxHeat, bColor=colors.gray, fColor=colors.orange,use=false})
+		table.insert(screen, gui.box:new{x=2,y=11,w=10,h=15,bColor=colors.gray})
+		table.insert(screen, gui.box:new{x=3,y=12,w=8,h=13,bColor=colors.yellow})	
+		for s =0,1 do		
+			table.insert(screen, gui.bar:new{x=6+s,y=12,size=13,current=self:getRodLevel(),max=100,use=false,orientation='vertical',bColor=colors.yellow,fColor=colors.gray})
+		end
+		table.insert(screen, gui.label:new{x=5,y=11,text=self:getRodLevel().."%",bColor=colors.gray})
+		local yPos = 25
+		local xPos = 13
+		for o = 1, 9 do
+			if y ~= 1 then
+				if (o-1) % 3 == 0 then
+					yPos = yPos - 2
+					xPos = 13
+				else
+					xPos = xPos + 6
+				end
+			end
+			table.insert(screen, gui.button:new{x=xPos,y=yPos,w=4,h=1,text=tostring(o*10)..'',func=function() self:setRodLevel(o*10) end,})
+		end
+		table.insert(screen, gui.button:new{x=13,y=25,w=4,h=1,text='-',func=function() self:setRodLevel(self:getRodLevel()-1) end})
+		table.insert(screen, gui.button:new{x=25,y=25,w=4,h=1,text='+',func=function() self:setRodLevel(self:getRodLevel()+1) end})
+		table.insert(screen, gui.button:new{x=19,y=25,w=4,h=1,text='00',func=function()self:setRodLevel(0)end})
+		table.insert(screen, gui.label:new{x=30,y=12,text="No. of rods:", bColor = colors.black})
+		table.insert(screen, gui.label:new{x=48,y=12,text=numToString(math.floor(peripheral.call(self.rawName, 'getNumberOfControlRods')))..' ',bColor=colors.black, fColor=colors.white})
+		table.insert(screen, gui.label:new{x=30,y=13,text='Reactivity:',bColor=colors.black,fColor=colors.orange})
+		table.insert(screen, gui.label:new{x=48,y=13,text=numToString(math.floor(peripheral.call(self.rawName, 'getFuelReactivity')))..' %',bColor=colors.black, fColor=colors.white})
+		table.insert(screen, gui.label:new{x=30,y=14,text='Actively Cooled:',bColor=colors.black,fColor=colors.orange})
+		table.insert(screen, gui.label:new{x=48,y=14,text=tostring(self:getActivelyCooled()),bColor=colors.black,fColor=colors.white})
+		return screen
+	end
+}
+
+turbine = bigReactor:new{
+	getSteam = function(self)
+		return peripheral.call(self.rawName, 'getInputAmount')
+	end,
+	getWater = function(self)
+		return peripheral.call(self.rawName, 'getOutputAmount')
+	end,
+	getRPM = function(self)
+		return peripheral.call(self.rawName, 'getRotorSpeed')
+	end,
+	getFlowRate = function(self)
+		local rate = peripheral.call(self.rawName, 'getFluidFlowRate')
+		local rateMax = peripheral.call(self.rawName, 'getFluidFlowRateMax')
+		local rateMaxMax = peripheral.call(self.rawName, 'getFluidFlowRateMaxMax')
+		return rate, rateMax, rateMaxMax
+	end,
+	setVenting = function(self, a)
+		a = a or 'Overflow'
+		if a == "Overflow" then
+			peripheral.call(self.rawName, 'setVentOverflow')
+		elseif a == 'None' then
+			peripheral.call(self.rawName, 'setVentNone')
+		else 
+			peripheral.call(self.rawName, 'setVentAll')
+		end
+		return a
+	end,
+	setInductor = function(self, a)
+		a = a or not self:getInductor()
+		peripheral.call(self.rawName, 'setInductorEngaged', a)
+		return a
+	end,
+	setFlowRate = function(self, i)
+		i = i or 2000
+		peripheral.call(self.rawName, 'setFluidFlowRateMax', i)
+		return i
+	end,
+	getInductor = function(self)
+		return peripheral.call(self.rawName, 'getInductorEngaged')
+	end,
+	automate = function(self)
+
+	end,
+	screen = function(self)
+		local screen = self:baseScreen() or {}
+		local monX, monY = gui.getSize()
+		table.insert(screen, gui.box:new{x=2,y=11,w=10,h=15,bColor=colors.gray})
+		table.insert(screen, gui.box:new{x=3,y=12,w=8,h=13,bColor=colors.lightGray})
+		table.insert(screen, gui.label:new{x=math.floor(monX/2),y=3,bColor=colors.black,fColor=colors.orange,text="Steam Amount:"})
+		table.insert(screen, gui.label:new{x=math.floor(monX/2)+14,y=3,bColor=colors.black,fColor=colors.white,text=self:getSteam()..' mb'})
+		table.insert(screen, gui.label:new{x=math.floor(monX/2),y=4,bColor=colors.black,fColor=colors.orange,text="Water Amount:"})
+		table.insert(screen, gui.label:new{x=math.floor(monX/2)+14,y=4,bColor=colors.black,fColor=colors.white,text=self:getWater()..' mb'})	
+		table.insert(screen, gui.bar:new{x=math.floor(monX/2),y=5,w=2,size=math.floor(monX/2)+1,current=self:getSteam(), max=4000, bColor=colors.gray, fColor=colors.orange,use=false})
+		table.insert(screen, gui.bar:new{x=math.floor(monX/2),y=6,w=2,size=math.floor(monX/2)+1,current=self:getSteam(), max=4000, bColor=colors.gray, fColor=colors.orange,use=false})
+		local coilCol = colors.red
+		if self:getInductor() then
+			coilCol = colors.blue
+		end
+		table.insert(screen, gui.box:new{x=4,y=23,w=6,h=2,bColor=coilCol})
+		table.insert(screen, gui.box:new{x=6,y=12,h=13,w=2,bColor=colors.gray})
+		for s=13, 21, 2 do
+			table.insert(screen, gui.box:new{x=4,y=s,w=6,h=1,bColor=colors.gray})
+		end
+		local _, rate = self:getFlowRate()
+		table.insert(screen, gui.label:new{x=3,y=11,text=rate..'mb/t', bColor=colors.gray,fColor=colors.orange})
+		table.insert(screen, gui.button:new{x=22,y=21,w=7,h=1,text="+1",func=function() self:setFlowRate(rate + 1) end})
+		table.insert(screen, gui.button:new{x=22,y=23,w=7,h=1,text="+10",func=function() self:setFlowRate(rate + 10) end})
+		table.insert(screen, gui.button:new{x=22,y=25,w=7,h=1,text="+100",func=function() self:setFlowRate(rate + 100) end})
+		table.insert(screen, gui.button:new{x=13,y=21,w=7,h=1,text="-1",func=function() self:setFlowRate(rate - 1) end})
+		table.insert(screen, gui.button:new{x=13,y=23,w=7,h=1,text="-10",func=function() self:setFlowRate(rate - 10) end})
+		table.insert(screen, gui.button:new{x=13,y=25,w=7,h=1,text="-100",func=function() self:setFlowRate(rate - 100) end})
+		table.insert(screen, gui.button:new{x=13,y=19,w=16,h=1,text="Coil",active=self:getInductor(), func=function() self:setInductor() end})
+		table.insert(screen, gui.label:new{x=30,y=12,text="Rotor RPM:", bColor = colors.black})
+		table.insert(screen, gui.label:new{x=48,y=12,text=numToString(math.floor(self:getRPM()))..' rpm',bColor=colors.black, fColor=colors.white})
+		table.insert(screen, gui.label:new{x=30,y=13,text="No. of blades:", bColor = colors.black})
+		table.insert(screen, gui.label:new{x=48,y=13,text=numToString(math.floor(peripheral.call(self.rawName, 'getNumberOfBlades')))..' blades',bColor=colors.black, fColor=colors.white})
+		table.insert(screen, gui.label:new{x=30,y=14,text="Blade efficiency:", bColor = colors.black})
+		table.insert(screen, gui.label:new{x=48,y=14,text=numToString(math.floor(peripheral.call(self.rawName, 'getBladeEfficiency')))..' %',bColor=colors.black, fColor=colors.white})
+		return screen
+	end
+}
+
+function saveBaseSetting()
+	local file = fs.open('settings', 'w')
+	file.writeLine(shown..' ')
+	file.writeLine(totalScreen)
+	file.writeLine(totalPage..' ')
+	file.writeLine(automate)
+	file.close()
+end
+
+function loadBaseSettings()
+	if fs.exists('settings') then
+		local file = fs.open('settings','r')
+		shown=tonumber(file.readLine())
+		totalScreen='true'==file.readLine()
+		totalPage=tonumber(file.readLine())
+		automate='true'==file.readLine()
+		file.close()
+	else
+		shown = 1
+		totalScreen = true
+		totalPage = 1
+		automate = false
+	end
+end
+
+function tableEmpty (t)
+  for _, _ in pairs(t) do
+     return false
+  end
+  return true
+end
+
+function drawScreen(tbl)
+	gui.clear()
+	for k,v in ipairs(tbl) do
+		v:draw()
+	end
+	return true
+end
+
+function getPeripherals()
+	r = {}
+	local n = 1
+	local rNum = 1
+	local tNum = 1
+	for k,v in pairs(peripheral.getNames()) do
+		if peripheral.getType(v) == "BigReactors-Reactor" then
+			table.insert(r,reactor:new{rawName=v, name= "Reactor "..rNum,isTurbine=false,number=rNum,num=n})
+			rNum = rNum + 1
+			n=n+1
+			if fs.exists(v) then
+			local file = fs.open(v, 'r')
+			for y,u in ipairs(r) do
+				if u.rawName == v then
+					u.optRodLevel = tonumber(file.readLine())
+				end
+			end
+			file.close()
+			table.insert(r, bg)
+		end
+		elseif peripheral.getType(v) == "BigReactors-Turbine" then
+			table.insert(r, turbine:new{rawName=v, name="Turbine "..tNum,isTurbine=true,number=tNum,num=n})
+			tNum = tNum + 1
+			n=n+1
+		end
+	end
+	return r
+end
+
+local table = getPeripherals()
+
+function allActive(b)
+	for k,v in ipairs(table) do
+		v:setActive(b)
+		saveBaseSetting()
+	end
+end
+
+function allCoils(b)
+	for k,v in ipairs(table) do
+		if v.isTurbine then
+			v:setInductor(b)
+			saveBaseSetting()
+		end
+	end
+end
+
+function pageUp()
+	if shown < #table then
+		shown = shown + 1
+		saveBaseSetting()
+	end
+end
+
+function pageDown()
+	if shown > 1 then
+		shown = shown - 1
+		saveBaseSetting()
+	end
+end
+
+function numToString(num)
+	num = string.reverse(tostring(math.floor(num)))
+	local toReturn = ""
+	for i = 1, num:len() do
+		if (i-1) % 3 == 0 and i ~= 1 then 
+			toReturn = ' '..toReturn
+		end
+		toReturn = string.sub(num,i,i)..toReturn
+	end
+	return toReturn
+end
+
+function showTotal(page)
+	allOn=true
+	allCoil=true
+	for k, v in ipairs(table) do
+		if not v:getActive() then
+			allOn = false
+		end
+
+		if v.isTurbine then
+			if not v:getInductor() then
+				allCoil = false
+			end
+		end
+	end
+	page = page or 1
+	local onlyEnergy = false
+	local screen = {}
+	local xPos = 0
+	local totNum = 0
+	local t = 0
+	t = #table
+	local thingy = math.ceil(t/3)
+	if thingy ~= 1 then
+		totNum = thingy
+	end
+	local n = 1
+	screen[#screen+1] = gui.header:new{text='Total Power Gen'}
+	for _, thing in ipairs(table) do
+		screen[#screen+1] = gui.button:new{x=(11*xPos)+2,y=11,w=10,h=15,bColor=colors.black, fColor=colors.black, bColorActive=colors.gray, fColorActive=colors.gray,func=function() shown = thing.num totalScreen = false saveBaseSetting() end}
+		if not thing.isTurbine then
+ 			if (n <= (4) * page) and (math.ceil(n/(3)) == page) then
+				local active = thing:getActive()
+				local activeCol = colors.red
+				if active then 
+					activeCol = colors.lime
+				end
+				screen[#screen+1] = (gui.button:new{x=(11*xPos)+2,y=10,w=10,h=1,text=thing.name,bColor=colors.black,fColor=colors.lime,bColorActive=colors.black,fColorActive=colors.red,active=not thing:getActive(),func=function() thing:setActive(not thing:getActive()) end})
+				
+				screen[#screen+1] = (gui.box:new{x=(11*xPos)+2,y=11,w=10,h=15,bColor=colors.gray})
+				screen[#screen+1] = (gui.box:new{x=(11*xPos)+3,y=12,w=8,h=13,bColor=colors.yellow})	
+				for s =0,1 do		
+					screen[#screen+1] = (gui.bar:new{x=(11*xPos)+6+s,y=12,size=13,current=thing:getRodLevel(),max=100,use=false,orientation='vertical',bColor=colors.yellow,fColor=colors.gray})
+				end
+				screen[#screen+1] = (gui.label:new{x=(11*xPos)+5,y=11,text=thing:getRodLevel().."%",bColor=colors.gray})
+				
+				xPos = xPos + 1
+			end
+		else
+			if (n <= (4) * page) and (math.ceil(n/(3)) == page) then
+				local active = thing:getActive()
+				local activeCol = colors.red
+				if active then 
+					activeCol = colors.lime
+				end
+				screen[#screen+1] = (gui.button:new{x=(11*xPos)+2,y=10,w=10,h=1,text=thing.name,bColor=colors.black,fColor=colors.lime,bColorActive=colors.black,fColorActive=colors.red,active=not thing:getActive(),func=function() thing:setActive(not thing:getActive()) end})
+				screen[#screen+1] = (gui.box:new{x=(11*xPos)+2,y=11,w=10,h=15,bColor=colors.gray})
+				screen[#screen+1] = (gui.box:new{x=(11*xPos)+3,y=12,w=8,h=13,bColor=colors.lightGray})						
+				local coilCol = colors.red
+				if thing:getInductor() then
+					coilCol = colors.blue
+				end
+				screen[#screen+1] = (gui.button:new{x=(11*xPos)+4,y=23,w=6,h=2,bColorActive=colors.gray,bColor=coilCol,text='',func=function() thing:setInductor(not thing:getInductor()) end})
+				screen[#screen+1] = (gui.box:new{x=(11*xPos)+6,y=12,h=13,w=2,bColor=colors.gray})
+				for s=13, 23, 2 do
+					screen[#screen+1] = (gui.box:new{x=(11*xPos)+4,y=s,w=6,h=1,bColor=colors.gray})
+				end
+				_, rate=thing:getFlowRate()
+				screen[#screen] = (gui.label:new{x=(11*xPos)+3,y=11,text=rate..'mb/t', bColor=colors.gray,fColor=colors.orange})
+				xPos = xPos + 1
+			end
+		end
+		n = n + 1
+	end
+	screen[#screen+1] = (gui.button:new{x=2,y=8,w=3,h=1,text="<",func=function() if page > 1 then totalPage = totalPage - 1 saveBaseSetting() end end})
+	screen[#screen+1] = (gui.button:new{x=31,y=8,w=3,h=1,text=">",func=function() if page < totNum then totalPage = totalPage + 1 saveBaseSetting() end end})
+	screen[#screen+1] = (gui.label:new{x=15,y=8,text="Page "..page,bColor=colors.black})
+	screen[#screen+1] = (gui.button:new{x=35,y=11,text="Show Single",w=13,h=3,func=function() screen = {} totalScreen = false saveBaseSetting() end})	
+	screen[#screen+1] = (gui.button:new{x=49,y=11,text="Automate",w=12,h=3,func=function() automate = not automate end,active=automate})
+	local totalEnergy = 0
+	local totalProd = 0
+	local totalSteamProd = 0
+	for k,v in ipairs(table) do
+		if not v.isTurbine then
+			if not v:getActivelyCooled() then
+				totalEnergy = totalEnergy + v:getStored()
+				totalProd = totalProd + v:getLastTick()
+			else
+				totalSteamProd = totalSteamProd + v:getLastTick()
+			end
+		else
+				totalEnergy = totalEnergy + v:getStored()
+				totalProd = totalProd + v:getLastTick()
+		end
+	end
+	screen[#screen+1] = (gui.label:new{x=2,y=3,text="Total Energy: ",bColor=colors.black})
+	screen[#screen+1] = (gui.label:new{x=16,y=3,text=numToString(totalEnergy).." RF",bColor=colors.black,fColor=colors.white})
+	screen[#screen+1] = (gui.label:new{x=2,y=4,text="Energy Produced: ",bColor=colors.black})
+	screen[#screen+1] = (gui.label:new{x=19,y=4,text=numToString(math.floor(totalProd+0.5)).." RF/t",bColor=colors.black,fColor=colors.white})
+	screen[#screen+1] = (gui.label:new{x=2,y=5,text="Steam Produced: ",bColor=colors.black})
+	screen[#screen+1] = (gui.label:new{x=18,y=5,text=numToString(math.floor(totalSteamProd+0.5)).." mb/t", bColor=colors.black, fColor=colors.white})
+	screen[#screen+1] = (gui.button:new{x=35,y=15,w=26,h=5,text="All on",func=function() allOn = not allOn allActive(allOn) end,active=allOn})
+	screen[#screen+1] = (gui.button:new{x=35,y=21,w=26,h=5,text='All coil',func=function() allCoil = not allCoil allCoils(allCoil)end, active=allCoil})
+	return screen
+end
+
+function click()
+	gui.awaitClick()
+	return true
+end
+
+function showScreen()
+	if totalScreen then
+		drawScreen( showTotal(totalPage) )
+	else
+		drawScreen( table[shown]:screen() )
+	end
+	sleep(2)
+end
+
+function auto()
+	local t = 0
+	local r = 0
+	for k,v in ipairs(table) do
+		if v.isTurbine then
+			t = t + 1
+		else
+			if v:getActivelyCooled() then
+				r = r + 1
+			end
+		end
+	end
+	for k,v in ipairs(table) do
+		v:automate(math.ceil((2000*t)/r))
+	end
+	automate = false
+end
+
+loadBaseSettings()
+
+while true do
+	for k,v in ipairs(table) do
+		if not v.isTurbine then
+			if fs.exists(v.rawName) then
+				v:setRodLevel(v.optRodLevel)
+			end
+		end 
+	end
+	if not automate then
+		parallel.waitForAny(click, showScreen)
+	else
+		auto()
+	end
+	sleep(0.05)
+end
