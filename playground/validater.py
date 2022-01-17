@@ -1,13 +1,38 @@
-import requests
+import turtle
+t=turtle.Turtle()
+t.color("black")
 
-"""valid = https://www.math.uzh.ch/typo3conf/ext/qfq/Classes/Api/download.php?s=61b15b754bfb2 
+screen=turtle.Screen()
+screen.setup(1500,1000)
+screen.bgcolor('red')
+t.penup()
+t.setpos(0,0)
+t.pendown()
+t.pencolor('white')
+t.pensize(4)
+t.shape('turtle')
+t.penup()
+t.setpos(0,-300)
+t.pendown()
+t.fillcolor('white')
+t.begin_fill()
+t.circle(300)
+t.end_fill()
+t.penup()
+t.setpos(0,0)
+t.pendown()
+t.pencolor('black')
+t.pensize(50)
+t.right(45)
+for i in range(4):
+  t.forward(150)
+  t.right(90)
+  t.forward(150)
+  t.penup()
+  t.setpos(0, 0)
+  t.tilt(90)
+  t.pendown()
 
-invalid = https://www.math.uzh.ch/typo3conf/ext/qfq/Classes/Api/download.php?s=61ae88c6e8518 
-"""
+t.fillcolor('black')
+turtle.done()
 
-url = 'http://www.math.uzh.ch/typo3conf/ext/qfq/Classes/Api/download.php?s=61b15b754bef7'
-
-r = requests.get(url)
-print(r.headers)
-print(r.content)
-print(r.text)
