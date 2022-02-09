@@ -7,7 +7,6 @@ txt2 = Path('rank').read_text()
 print(txt2)
 keyboard = Controller()
 
-
 def split(words):
     return [char for char in words]
 
