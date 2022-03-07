@@ -1,12 +1,12 @@
 from fractions import Fraction
 
 
-def arctan(a, b):
+def arctan(a, b, e):
     """This function takes two int (a and b) as an input,
     and then calculates the arctan of the fraction a/b"""
     t_old = res = x = Fraction(a, b)
     k = 1
-    eps = 3000
+    eps = e
     while True:
         t = (-x ** 2) * t_old
         res = res + Fraction(t, 2 * k + 1)
@@ -16,9 +16,9 @@ def arctan(a, b):
             return res
 
 
-def pi():
+def pi(e):
     """This function returns pi as a fraction"""
-    return 4 * (arctan(1, 2) + arctan(1, 3))
+    return 4 * (arctan(1, 2, e) + arctan(1, 3, e))
 
 
 def frac_to_string(frac):
@@ -29,7 +29,6 @@ def frac_to_string(frac):
     return str(pn) + '.' + str(pf1000)
 
 
-pi = frac_to_string(pi())
+pi = frac_to_string(pi(5000))
 print(pi[941:955])
-# print(pi[2:8])
 print(pi)
