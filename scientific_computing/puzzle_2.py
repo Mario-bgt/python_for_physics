@@ -3,10 +3,8 @@ from fractions import Fraction
 
 def arctan(a, b):
     """This function takes two int (a and b) as an input,
-    and the calculates the arctan of the fraction a/b"""
-    x = Fraction(a, b)
-    res = Fraction(a, b)
-    t_old = Fraction(a, b)
+    and then calculates the arctan of the fraction a/b"""
+    t_old = res = x = Fraction(a, b)
     k = 1
     eps = 3000
     while True:
@@ -33,5 +31,5 @@ def frac_to_string(frac):
 
 pi = frac_to_string(pi())
 print(pi[941:955])
-#print(pi[2:8])
+# print(pi[2:8])
 print(pi)
