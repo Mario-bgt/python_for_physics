@@ -1,17 +1,17 @@
 def Series(a, b, c, z):
-    Tk = 1
+    tk = 1
     eps = 0.0001
-    Sum = 1
+    summe = 1
     k = 1
     while True:
         up = (a + k - 1) * (b + k - 1)
         down = (c + k - 1) * k
         part = up / down
-        Tk = part * z * Tk
-        Sum = Sum + Tk
+        tk = part * z * tk
+        summe = summe + tk
         k = k + 1
-        if abs(Tk) < eps:
-            return Sum
+        if abs(tk) < eps:
+            return summe
 
 
 z = float(input("gib nummier:"))  # -0.234647

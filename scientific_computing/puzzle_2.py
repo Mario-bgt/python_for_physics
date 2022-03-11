@@ -3,7 +3,9 @@ from fractions import Fraction
 
 def arctan(a, b, e):
     """This function takes two int (a and b) as an input,
-    and then calculates the arctan of the fraction a/b"""
+    and then calculates the arctan of the fraction a/b. e represents
+    the amount  of repetition for the taylor sum to calculate arctan, the greater e is
+    the more accurate is the result."""
     t_old = res = x = Fraction(a, b)
     k = 1
     eps = e
@@ -17,7 +19,8 @@ def arctan(a, b, e):
 
 
 def pi(e):
-    """This function returns pi as a fraction"""
+    """This function returns pi as a fraction, with e being as
+    described in def arctan"""
     return 4 * (arctan(1, 2, e) + arctan(1, 3, e))
 
 
