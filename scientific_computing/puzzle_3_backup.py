@@ -12,12 +12,16 @@ def bernoulli(m):
     b = [Fraction(1, 1), Fraction(-1, 2)]
     f = factorials(m+1)
     for i in range(2, m):
+        k = 0
         summe = 0
-        for k in range(0, i):
+        while True:
             up = int(f[i] * b[k])
             down = int(f[k] * f[(i - k + 1)])
             summe = summe + Fraction(up, down)
-        b.append(-summe)
+            k += 1
+            if k == i:
+                b.append(-1 * summe)
+                break
     return b
 
 
