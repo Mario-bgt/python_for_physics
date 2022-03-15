@@ -1,27 +1,24 @@
 from fractions import Fraction
 
 
-def arctan(a, b, e):
+def arctan(a, b):
     """This function takes two int (a and b) as an input,
-    and then calculates the arctan of the fraction a/b. e represents
-    the amount  of repetition for the taylor sum to calculate arctan, the greater e is
-    the more accurate is the result."""
+    and then calculates the arctan of the fraction a/b."""
     t_old = res = x = Fraction(a, b)
     k = 1
-    eps = e
+    eps = Fraction(1, 10**1000)
     while True:
         t = (-x ** 2) * t_old
         res = res + Fraction(t, 2 * k + 1)
         t_old = t
         k += 1
-        if k == eps:
+        if abs(Fraction(t, 2 * k + 1)) < eps:
             return res
 
 
-def pi(e):
-    """This function returns pi as a fraction, with e being as
-    described in def arctan"""
-    return 4 * (arctan(1, 2, e) + arctan(1, 3, e))
+def pi():
+    """This function returns pi as a fraction."""
+    return 4 * (arctan(1, 2) + arctan(1, 3))
 
 
 def frac_to_string(frac):
@@ -32,6 +29,6 @@ def frac_to_string(frac):
     return str(pn) + '.' + str(pf1000)
 
 
-pi = frac_to_string(pi(5000))
+pi = frac_to_string(pi())
 print(pi[941:955])
 print(pi)
