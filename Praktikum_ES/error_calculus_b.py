@@ -1,12 +1,18 @@
 import numpy as np
 
 """For calculating the medium value for x_0"""
-values = [18,
-          18.1,
-          18.1,
-          18.1,
-          18,
+values = [23.9,
+          24.5,
+          24.55696203,
+          24.92857143,
+          24.83333333,
+          26.1,
+          26.26506024,
+          28.03571429,
+          30,
+          35
           ]
+
 y = int(len(values))
 x = 0
 
