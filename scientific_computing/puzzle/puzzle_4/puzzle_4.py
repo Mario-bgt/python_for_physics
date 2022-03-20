@@ -1,4 +1,6 @@
 import csv
+import time
+start = time.time()
 
 filename = 'exoplanets.csv'
 file = open(filename, encoding='utf-8')
@@ -57,3 +59,5 @@ print('The daylight strength relative to the Earth is at max 2 times and at min 
 print('The following exoplanets were found:')
 for planets in exoplanets:
     print(planets)
+end = time.time()
+print('It took', (end - start), 'seconds to execute.')

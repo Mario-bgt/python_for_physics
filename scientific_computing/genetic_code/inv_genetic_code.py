@@ -9,4 +9,6 @@ for c in lines:
 
 for i in dna:
     dna[i].sort()
-    print(i, dna[i])
+    #print(i, type(i), dna[i], type(dna[i]))
+
+print(dna['Asparagin'][1])
