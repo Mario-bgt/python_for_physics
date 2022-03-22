@@ -12,7 +12,6 @@ for i, row in enumerate(table1[5:]):
             if row[1] not in rail:
                 rail[row[1]] = {}
             rail[row[1]][2006] = float(col)
-print(rail)
 
 filename2 = 'population.csv'
 file2 = open(filename2, encoding='utf-8')
