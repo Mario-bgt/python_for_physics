@@ -1,4 +1,6 @@
 from fractions import Fraction
+import time
+start = time.time()
 
 
 def arctan(a, b):
@@ -32,3 +34,5 @@ def frac_to_string(frac):
 pi = frac_to_string(pi())
 print(pi[941:955])
 print(pi)
+end = time.time()
+print('It took', (end - start), 'seconds to execute.')
