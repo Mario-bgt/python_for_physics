@@ -1,5 +1,4 @@
 import csv
-import numpy as np
 import matplotlib.pyplot as plt
 
 non_countries = ['ARB', 'CEB', 'CSS', 'EAP', 'EAR', 'EAS', 'ECA',
@@ -52,62 +51,21 @@ for i in population:
 for i in rail_per_pop:
     print(i, rail_per_pop[i])
 
-
-def timevar(indic, c):
-    x = []
-    y = []
-    for t in range(1995, 2013):
-        if t in indic[c]:
-            x.append(t)
-            y.append(indic[c][t])
-    return x, y
-
-
-x, y = timevar(rail_per_pop, 'CHE')
-plt.plot(x, y, label='Switzerland')
-x, y = timevar(rail_per_pop, 'POL')
-plt.plot(x, y, label='Poland')
-x, y = timevar(rail_per_pop, 'USA')
-plt.plot(x, y, label='USA')
-x, y = timevar(rail_per_pop, 'UKR')
-plt.plot(x, y, label='Ukraine')
-x, y = timevar(rail_per_pop, 'AUS')
-plt.plot(x, y, label='Australia')
-x, y = timevar(rail_per_pop, 'AUT')
-plt.plot(x, y, label='Austria')
-x, y = timevar(rail_per_pop, 'FRA')
-plt.plot(x, y, label='France')
-x, y = timevar(rail_per_pop, 'EST')
-plt.plot(x, y, label='Estonia')
-x, y = timevar(rail_per_pop, 'IRL')
-plt.plot(x, y, label='Ireland')
-x, y = timevar(rail_per_pop, 'HRV')
-plt.plot(x, y, label='Croatia')
-plt.xlabel('Year')
-plt.ylabel('Railwaytrack per person in meters')
-plt.title('Different amount of railway tracks per person of countries')
-plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
-           fancybox=True, shadow=True, ncol=5)
-plt.show()
-
 plt.rcdefaults()
-fig, ax = plt.subplots()
 
-countries = ('Switzerland','Poland', 'USA', 'Ukraine','Australia','Austria','France','Estonia','Ireland','Croatia')
-for t in range(1995, 2013):
-    y_pos = np.arange(len(countries))
-
-# Example data
-people = ('Tom', 'Dick', 'Harry', 'Slim', 'Jim')
-y_pos = np.arange(len(people))
-performance = 3 + 10 * np.random.rand(len(people))
-error = np.random.rand(len(people))
-
-ax.barh(y_pos, performance, xerr=error, align='center')
-ax.set_yticks(y_pos)
-ax.set_yticklabels(people)
-ax.invert_yaxis()  # labels read top-to-bottom
-ax.set_xlabel('Performance')
-ax.set_title('How fast do you want to go today?')
+index = ('CHE', 'POL', 'USA', 'UKR', 'AUT', 'FRA', 'IRL', 'HRV', 'DEU')
+countries = (['Switzerland', 'Poland', 'USA', 'Ukraine', 'Austria', 'France', 'Ireland', 'Croatia', 'Germany'])
+color = (['red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'pink', 'purple', 'black'])
+for t in range(1995, 2014):
+    plt.gca().clear()
+    y = []
+    for i in index:
+        y.append(rail_per_pop[i][t])
+    print(y)
+    plt.bar(countries, y, color=color)
+    plt.xticks(countries)
+    plt.ylabel('Amount of track per person')
+    plt.title('Railwaytrack per person in the year ' + str(t))
+    plt.pause(1)
 
 plt.show()

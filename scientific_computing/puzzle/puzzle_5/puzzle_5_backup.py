@@ -53,63 +53,39 @@ for i in rail_per_pop:
     print(i, rail_per_pop[i])
 
 
-def timevar(indic, c):
+def timevar(indic, c, year):
     x = []
     y = []
-    for t in range(1995, 2012):
+    for t in range(1995, year):
         if t in indic[c]:
             x.append(t)
             y.append(indic[c][t])
     return x, y
 
 
-x, y = timevar(rail_per_pop, 'CHE')
-plt.plot(x, y, label='Switzerland')
-'''
-x, y = timevar(rail_per_pop, 'FIN')
-plt.plot(x, y, label='Finland')
-x, y = timevar(rail_per_pop, 'SWE')
-plt.plot(x, y, label='Sweden')
-'''
-x, y = timevar(rail_per_pop, 'POL')
-plt.plot(x, y, label='Poland')
-x, y = timevar(rail_per_pop, 'USA')
-plt.plot(x, y, label='USA')
-x, y = timevar(rail_per_pop, 'UKR')
-plt.plot(x, y, label='Ukraine')
-x, y = timevar(rail_per_pop, 'AUS')
-plt.plot(x, y, label='Australia')
-x, y = timevar(rail_per_pop, 'AUT')
-plt.plot(x, y, label='Austria')
-x, y = timevar(rail_per_pop, 'FRA')
-plt.plot(x, y, label='France')
-x, y = timevar(rail_per_pop, 'EST')
-plt.plot(x, y, label='Estonia')
-x, y = timevar(rail_per_pop, 'IRL')
-plt.plot(x, y, label='Ireland')
-x, y = timevar(rail_per_pop, 'HRV')
-plt.plot(x, y, label='Croatia')
-plt.xlabel('Year')
-plt.ylabel('Railwaytrack per person in meters')
-plt.title('Different amount of railway tracks per person of countries')
-plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
-           fancybox=True, shadow=True, ncol=5)
-plt.show()
-
-plt.rcdefaults()
-fig, ax = plt.subplots()
-
-# Example data
-people = ('Tom', 'Dick', 'Harry', 'Slim', 'Jim')
-y_pos = np.arange(len(people))
-performance = 3 + 10 * np.random.rand(len(people))
-error = np.random.rand(len(people))
-
-ax.barh(y_pos, performance, xerr=error, align='center')
-ax.set_yticks(y_pos)
-ax.set_yticklabels(people)
-ax.invert_yaxis()  # labels read top-to-bottom
-ax.set_xlabel('Performance')
-ax.set_title('How fast do you want to go today?')
-
+for year in range(1996, 2015):
+    plt.gca().clear()
+    x, y = timevar(rail_per_pop, 'CHE', year)
+    plt.plot(x, y, label='Switzerland')
+    x, y = timevar(rail_per_pop, 'POL', year)
+    plt.plot(x, y, label='Poland')
+    x, y = timevar(rail_per_pop, 'USA', year)
+    plt.plot(x, y, label='USA')
+    x, y = timevar(rail_per_pop, 'UKR', year)
+    plt.plot(x, y, label='Ukraine')
+    x, y = timevar(rail_per_pop, 'AUT', year)
+    plt.plot(x, y, label='Austria')
+    x, y = timevar(rail_per_pop, 'FRA', year)
+    plt.plot(x, y, label='France')
+    x, y = timevar(rail_per_pop, 'IRL', year)
+    plt.plot(x, y, label='Ireland')
+    x, y = timevar(rail_per_pop, 'HRV', year)
+    plt.plot(x, y, label='Croatia')
+    plt.xticks(range(1995,year,1))
+    plt.xlabel('From 1995 till ' + str(year))
+    plt.ylabel('Railwaytrack per person in meters')
+    plt.title('Different amount of railway tracks per person of countries')
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
+               fancybox=True, shadow=True, ncol=5)
+    plt.pause(2)
 plt.show()
