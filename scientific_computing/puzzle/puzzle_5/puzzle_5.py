@@ -66,6 +66,6 @@ for t in range(1995, 2014):
     plt.xticks(countries)
     plt.ylabel('Amount of track per person')
     plt.title('Railwaytrack per person in the year ' + str(t))
-    plt.pause(1)
+    plt.pause(2)
 
 plt.show()
