@@ -40,14 +40,15 @@ y3 = [16.5,
 plt.plot(np.unique(x), np.poly1d(np.polyfit(x, y, 1))(np.unique(x)), linewidth='0.5', linestyle='dashed', color='green')
 slope_intercept = np.polyfit(x, y2, 1)
 slope_intercept = str(slope_intercept)
-slope_intercept = slope_intercept.replace("  ", "x + ")
+print(slope_intercept)
+slope_intercept = slope_intercept.replace(" ", "x + ")
 slope_intercept = slope_intercept.replace("[", "")
 slope_intercept = slope_intercept.replace("]", "")
 plt.plot(np.unique(x), np.poly1d(np.polyfit(x, y2, 1))(np.unique(x)), linewidth='0.5', linestyle='dashed', color='red',
          label=r'$Linear\:fit\:f(x) = $' + str(slope_intercept))
 slope_intercept2 = np.polyfit(x, y3, 1)
 slope_intercept2 = str(slope_intercept2)
-slope_intercept2 = slope_intercept2.replace("  ", "x + ")
+slope_intercept2 = slope_intercept2.replace(" ", "x + ")
 slope_intercept2 = slope_intercept2.replace("[", "")
 slope_intercept2 = slope_intercept2.replace("]", "")
 plt.plot(np.unique(x), np.poly1d(np.polyfit(x, y3, 1))(np.unique(x)), linewidth='0.5', linestyle='dashed', color='blue',

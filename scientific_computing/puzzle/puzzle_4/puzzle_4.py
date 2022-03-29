@@ -28,9 +28,10 @@ for i in ep:
                     (float(ep[i]['semi_major_axis'])) ** (-2))
         if 1.5 > m > 0.6 and 5 > s > 0.2:
             k += 1
+            print(i, m, s, ep[i])
             exoplanets.append(i)
-print('We found', k, 'earth like exoplanets with a mass between max 4 times earth mass and min 0.5 times earth mass.')
-print('The daylight strength relative to the Earth is at max 2 times and at min 0.2 times the one of earth.')
+print('We found', k, 'earth like exoplanets with a mass between max 1.5 times earth mass and min 0.6 times earth mass.')
+print('The daylight strength relative to the Earth is at max 5 times and at min 0.2 times the one of earth.')
 print('The following exoplanets were found:')
 for planets in exoplanets:
     print(planets)
