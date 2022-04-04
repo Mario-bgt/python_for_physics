@@ -53,9 +53,9 @@ for i in rail_per_pop:
 
 plt.rcdefaults()
 
-index = ('CHE', 'POL', 'USA', 'UKR', 'AUT', 'FRA', 'IRL', 'HRV', 'DEU')
-countries = (['Switzerland', 'Poland', 'USA', 'Ukraine', 'Austria', 'France', 'Ireland', 'Croatia', 'Germany'])
-color = (['red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'pink', 'purple', 'black'])
+index = ('CHE', 'POL', 'USA', 'UKR', 'AUT', 'FRA', 'IRL', 'HRV', 'FIN','SWE')
+countries = (['Switzerland', 'Poland', 'USA', 'Ukraine', 'Austria', 'France', 'Ireland', 'Croatia', 'Finland','Sweden'])
+color = (['red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'pink', 'purple', 'black', 'yellow'])
 for t in range(1995, 2014):
     plt.gca().clear()
     y = []
