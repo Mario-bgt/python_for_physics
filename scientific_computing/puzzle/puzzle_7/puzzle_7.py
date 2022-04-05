@@ -30,7 +30,7 @@ def rotate(fname, ang):
     return img
 
 
-def stretch(fname, scalex,scaley):
+def stretch(fname, scalex, scaley):
     src = fname
     src = src[:, :, :3]
     img = 0 * src
@@ -41,9 +41,9 @@ def stretch(fname, scalex,scaley):
     for i in range(isize):
         for j in range(jsize):
             x = i - imid
-            y = j -jmid
-            si = imid + int(scalex*x)
-            sj = jmid +int(scaley*y)
+            y = j - jmid
+            si = imid + int(scalex * x)
+            sj = jmid + int(scaley * y)
             if 0 <= si < isize and 0 <= sj < jsize:
                 img[i, j, :] = src[si, sj, :]
     return img
@@ -51,7 +51,7 @@ def stretch(fname, scalex,scaley):
 
 img = plt.imread('holbein.png')
 img = rotate(img, (3 * np.pi) / 20)
-img = stretch(img,1,6)
+img = stretch(img, 1, 7)
 plt.style.use('dark_background')
 plt.imshow(img)
 plt.show()
