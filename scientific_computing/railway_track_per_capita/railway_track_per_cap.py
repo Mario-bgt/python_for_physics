@@ -39,7 +39,7 @@ for i, row in enumerate(table2[5:]):
             population[row[1]][header[j]] = 0
 
 if year == 'all':
-    yeet = np.linspace(1960, 2015, 56)
+    yeet = np.linspace(1960, 2020, 61)
     for y in yeet:
         j = str(y)[:-2]
         maximum = float(0)
