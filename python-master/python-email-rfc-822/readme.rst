@@ -1,1 +1,0 @@
-You can read tutorial https://www.roytuts.com/how-to-use-rfc-822-for-sending-email-in-python/

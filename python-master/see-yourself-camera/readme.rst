@@ -1,1 +1,0 @@
-You can read tutorial https://www.roytuts.com/see-yourself-in-webcam-using-python/
