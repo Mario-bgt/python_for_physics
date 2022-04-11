@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.io.wavfile as wav
 import random
+from pydub import AudioSegment
+from pydub.playback import play
 
 SFREQ = 4800
 
@@ -37,14 +39,16 @@ def reine_stimmung(n, m, l):
 
 
 rythm = []
-l = ('a', 'b', 'c', 'd', 'e', 'f','g','h','i')
+l = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i')
 for i in l:
     a = random.randint(1, 4)
     b = random.randint(1, 4)
     c = random.randint(1, 4)
-    print(a,b,c)
     l = reine_stimmung(a, b, c)
     rythm.append(l)
 
 ton = np.concatenate(rythm)
 wav.write('notes.wav', SFREQ, ton)
+
+song = AudioSegment.from_wav("notes.wav")
+play(song)
