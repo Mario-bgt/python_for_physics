@@ -1,14 +1,11 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import scipy.io.wavfile as wav
+import simpleaudio as sa
 
-SFREQ = 48000
-t = np.linspace(0, 1, SFREQ)
-f = 440
-w = 2 * np.pi * f
-
-sig = np.sin(w * t)
-sig[:1000] = sig[:1000] * np.linspace(0, 1, 1000)
-sig[-1000:] = sig[-1000:] * np.linspace(1, 0, 1000)
-ton = np.concatenate((sig,sig))
-wav.write('kacktask.wav', SFREQ, ton)
+wave_obj = sa.WaveObject.from_wave_file("notes.wav")
+play_obj = wave_obj.play()
+#play_obj.wait_done() #blocking call
+while True:
+    if(play_obj.is_playing()):
+        print('Playing')
+    else:
+        print('Ended')
+        break
