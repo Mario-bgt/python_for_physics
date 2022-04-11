@@ -1,1 +1,0 @@
-You can read tutorial https://www.roytuts.com/python-flask-rest-api-multiple-files-upload/

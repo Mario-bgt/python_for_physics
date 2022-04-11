@@ -1,1 +1,0 @@
-You can read tutorial https://www.roytuts.com/how-to-convert-html-content-into-pdf-document-using-python/
