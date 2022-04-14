@@ -15,7 +15,7 @@ for i in t:
     def Df(phi):
         j = 1 - e * np.cos(phi)
         return j
-    xn = 10
+    xn = 1
     res = newton(f, Df, xn)
     phi_tot.append(res)
 

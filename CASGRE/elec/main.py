@@ -8,6 +8,7 @@ import simplekml
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 dfp = pd.read_pickle('a_file.pkl')
+dfplot = pd.read_pickle('a_file.pkl')
 
 fig = px.scatter_mapbox(dfp, lat="lat", lon="lon",
                         hover_name="xtf_id",
@@ -82,12 +83,14 @@ app.layout = html.Div([
      ])
 def update_output(main_cat, plant_cat, sub_cat, minimum, maximum):
     global fig
+    global dfplot
     df = dfp
     df = df[df.Total_Power > minimum]
     df = df[df.Total_Power < maximum]
     df = df[df.Main_Cat.isin(main_cat)]
     df = df[df.Sub_Cat.isin(sub_cat)]
     df = df[df.Plant_Cat.isin(plant_cat)]
+    dfplot = df
     fig = px.scatter_mapbox(df, lat="lat", lon="lon",
                             hover_name="xtf_id",
                             hover_data=['_x', '_y','Initial Power', 'Total_Power', 'Main_Cat', 'Sub_Cat',
@@ -95,30 +98,23 @@ def update_output(main_cat, plant_cat, sub_cat, minimum, maximum):
                             zoom=13,
                             height=800)
     fig.update_layout(mapbox_style="open-street-map")
+    kml = simplekml.Kml()
+    for i in range(0, len(df)):
+        kml.newpoint(description=df.iloc[i]['xtf_id'], coords=[(df.iloc[i]['lon'], df.iloc[i]['lat'])])
+    kml.save('currentplot.kml')
     return fig
 
 
 @app.callback(
     dash.dependencies.Output('download', 'data'),
     [dash.dependencies.Input('btn_html', 'n_clicks'),
-     dash.dependencies.Input('main_cat', 'value'),
-     dash.dependencies.Input('plant_cat', 'value'),
-     dash.dependencies.Input('sub_cat', 'value'),
-     dash.dependencies.Input('minimum', 'value'),
-     dash.dependencies.Input('maximum', 'value'),
      ]
 )
-def download(n_clicks, main_cat, plant_cat, sub_cat, minimum, maximum):
+def download(n_clicks):
     if n_clicks is None:
         print('Button HTML has not been pressed yet')
     else:
-        df = dfp
-        df = df[df.Total_Power > minimum]
-        df = df[df.Total_Power < maximum]
-        df = df[df.Main_Cat.isin(main_cat)]
-        df = df[df.Sub_Cat.isin(sub_cat)]
-        df = df[df.Plant_Cat.isin(plant_cat)]
-        fig = px.scatter_mapbox(df, lat="lat", lon="lon",
+        fig = px.scatter_mapbox(dfplot, lat="lat", lon="lon",
                                 hover_name="xtf_id",
                                 hover_data=['_x', '_y', 'Initial Power', 'Total_Power', 'Main_Cat', 'Sub_Cat',
                                             'Plant_Cat'],
@@ -134,51 +130,25 @@ def download(n_clicks, main_cat, plant_cat, sub_cat, minimum, maximum):
 @app.callback(
     dash.dependencies.Output('download2', 'data'),
     [dash.dependencies.Input('btn_kml', 'n_clicks'),
-     dash.dependencies.Input('main_cat', 'value'),
-     dash.dependencies.Input('plant_cat', 'value'),
-     dash.dependencies.Input('sub_cat', 'value'),
-     dash.dependencies.Input('minimum', 'value'),
-     dash.dependencies.Input('maximum', 'value'),
      ]
 )
-def download(n_clicks, main_cat, plant_cat, sub_cat, minimum, maximum):
+def download(n_clicks):
     if n_clicks is None:
         print('Button KML has not been pressed yet')
     else:
-        df = dfp
-        df = df[df.Total_Power > minimum]
-        df = df[df.Total_Power < maximum]
-        df = df[df.Main_Cat.isin(main_cat)]
-        df = df[df.Sub_Cat.isin(sub_cat)]
-        df = df[df.Plant_Cat.isin(plant_cat)]
-        kml = simplekml.Kml()
-        for i in range(0, len(df)):
-            kml.newpoint(description=df.iloc[i]['xtf_id'], coords=[(df.iloc[i]['lon'], df.iloc[i]['lat'])])
-        kml.save('currentplot.kml')
-        return dcc.send_file("currentmap.kml")
+        return dcc.send_file("currentplot.kml")
 
 
 @app.callback(
     dash.dependencies.Output('download3', 'data'),
     [dash.dependencies.Input('btn_xlsx', 'n_clicks'),
-     dash.dependencies.Input('main_cat', 'value'),
-     dash.dependencies.Input('plant_cat', 'value'),
-     dash.dependencies.Input('sub_cat', 'value'),
-     dash.dependencies.Input('minimum', 'value'),
-     dash.dependencies.Input('maximum', 'value'),
      ]
 )
-def download(n_clicks, main_cat, plant_cat, sub_cat, minimum, maximum):
+def download(n_clicks):
     if n_clicks is None:
         print('Button XLSX has not been pressed yet')
     else:
-        df = dfp
-        df = df[df.Total_Power > minimum]
-        df = df[df.Total_Power < maximum]
-        df = df[df.Main_Cat.isin(main_cat)]
-        df = df[df.Sub_Cat.isin(sub_cat)]
-        df = df[df.Plant_Cat.isin(plant_cat)]
-        df.to_excel('currentmap.xlsx')
+        dfplot.to_excel('currentmap.xlsx')
         return dcc.send_file("currentmap.xlsx")
 
 

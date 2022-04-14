@@ -4,7 +4,7 @@ from calc import *
 
 e = 1.2
 a = 1.28
-t = np.linspace(-np.pi, np.pi, 150)
+t = np.linspace(-np.pi, np.pi, 160)
 phi_tot = list()
 for i in t:
     def f(phi):
