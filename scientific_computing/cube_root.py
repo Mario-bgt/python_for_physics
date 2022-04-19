@@ -1,10 +1,13 @@
 def newton(f, Df, xn):
-    epsilon = 1e-300
+    xold = [xn]
+    n = 0
     while True:
-        if f(xn) / Df(xn) < epsilon:
-            print(xn)
-            break
-        xn = xn - f(xn) / Df(xn)
+        xn = xn - f(xn)/Df(xn)
+        if xn in xold:
+            print('it took',n,'iterations to compile')
+            return xn
+        xold.append(xn)
+        n += 1
 
 
 def f(x):
@@ -19,4 +22,4 @@ def Df(x):
 
 xn = 4
 
-newton(f, Df, xn)
+print(newton(f, Df, xn))

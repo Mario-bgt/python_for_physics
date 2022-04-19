@@ -1,62 +1,26 @@
 import numpy as np
 
-values = [10,
-          9,
-          8,
-          12,
-          11,
-          17,
-          15,
-          15,
-          12,
-          7,
-          6,
-          13,
-          11,
-          8,
-          10,
-          11,
-          10,
-          9,
-          10,
-          13,
-          10,
-          10,
-          6,
-          9,
-          14,
-          5,
-          18,
-          4,
-          8,
-          8,
-          8,
-          13,
-          6,
-          3,
-          13,
-          10,
-          10,
-          12,
-          12,
-          9,
-          13,
-          15,
-          14,
-          13,
-          11,
-          18,
-          8,
-          6,
-          16,
-          10,
+values = [3.3*10**(-5),
+          2.97*10**(-5),
+          2.805*10**(-5),
+          3.3*10**(-5),
+          2.97*10**(-5),
+          2.805*10**(-5),
+          2.805*10**(-5),
+          3.3*10**(-5),
+          2.805*10**(-5),
+          3.006666667*10**(-5)
           ]
-x = 10.58
+summe = 0
+n = len(values)
+for i in values:
+    summe += i
+mittelwert = summe/n
+print('Der Mittelwert beträgt:', mittelwert)
 
 error = 0
 for i in values:
-    error += (i - x)**2
+    error += (i - mittelwert) ** 2
 
-n = len(values)
-error = np.sqrt(error /(n*(n-1)))
-print(error)
+error = np.sqrt(error / (n * (n - 1)))
+print('Der statistische fehler beträgt:', error)
