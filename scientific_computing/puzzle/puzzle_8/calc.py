@@ -1,10 +1,9 @@
 def newton(f, Df, xn):
-    epsilon = 1e-320
+    xold = [xn]
     n = 0
     while True:
-        if n > 10000:
-            return xn
-        if f(xn)/Df(xn) < epsilon:
-            return xn
         xn = xn - f(xn)/Df(xn)
+        if xn in xold:
+            return xn
+        xold.append(xn)
         n += 1
