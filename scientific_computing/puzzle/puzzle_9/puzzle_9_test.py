@@ -14,7 +14,7 @@ g = 9.81
 
 v_phi = [0]
 v_tau=[0]
-tau_max = 30
+tau_max = 300
 
 
 def a(phi, tau):
@@ -32,7 +32,8 @@ while tau[-1] < tau_max - dtau / 2:
     tau.append(tau[-1] + dtau)
     phi.append(phi[-1] + dv_phi)
 
-
+print(tau)
+print(phi)
 mp_x = L*np.sin(tau)
 mp_y = -L*np.cos(tau)
 
@@ -46,26 +47,6 @@ for t in range(1, len(tau)):
     y1 = pm_y[:t]
     x2 = mp_x[:t]
     y2 = mp_y[:t]
-    plt.subplot(2,2,1)
-    plt.gca().clear()
-    plt.plot(x1,y1)
-    plt.plot(pm_x[t-1:t], pm_y[t-1:t], 'ro')
-    plt.title('Position of pendulum mass at the time ' + str(t/10))
-    plt.subplot(2,2,2)
-    plt.gca().clear()
-    plt.plot(0, 0, 'yo')
-    plt.plot(x2,y2)
-    plt.plot(mp_x[t - 1:t], mp_y[t - 1:t], 'ro')
-    plt.title('Position of the mount point ' + str(t/10))
-    plt.subplot(2, 2, 3)
-    plt.gca().clear()
-    plt.plot(0, 0, 'yo')
-    plt.plot(x2,y2)
-    plt.plot(mp_x[t - 1:t], mp_y[t - 1:t], 'ro')
-    plt.plot(x1, y1)
-    plt.plot(pm_x[t - 1:t], pm_y[t - 1:t], 'ro')
-    plt.title('Both functions in one at ' + str(t / 10))
-    plt.subplot(2, 2, 4)
     plt.gca().clear()
     plt.plot(0, 0, 'yo')
     plt.plot(x2,y2)
