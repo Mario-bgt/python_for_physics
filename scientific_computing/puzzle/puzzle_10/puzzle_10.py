@@ -14,9 +14,9 @@ P_y = []
 
 j = 0
 for i in data:
-    M[j] = (i[0]*c**3)/G
-    R[j] = [i[1]*c, i[2]*c]
-    V[j] = [c-i[3], c-i[4]]
+    M[j] = i[0]
+    R[j] = [i[1], i[2]]
+    V[j] = [i[3], i[4]]
     j += 1
 
 R_tot = R
@@ -37,8 +37,8 @@ def pot(pot):
     return pot
 
 
-t_max = 3600*24*2
-dt = 300
+t_max = 36000*24*2
+dt = 1800
 time = 0
 
 while time < t_max:
@@ -66,6 +66,7 @@ for i in range(int(len(P_x)/5)):
     x = P_x[i:i+5]
     y = P_y[i:i+5]
     plt.plot(x, y,'bo',)
+    plt.title('Zeit in Stunden: ' + str(i*5*1800/3600))
     plt.pause(0.1)
     plt.clf()
 
