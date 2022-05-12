@@ -4,7 +4,7 @@ from numpy import sin, cos, pi
 
 h = 6
 year = 365
-starting_day = 180
+starting_day = 100
 
 
 def R_x(phi):

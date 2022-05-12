@@ -38,7 +38,7 @@ def pot(pot):
 
 
 t_max = 3600*24*2
-dt = 300
+dt = 1800
 time = 0
 
 while time < t_max:
@@ -47,31 +47,16 @@ while time < t_max:
         a_y = 0
         for i in range(5):
             if j != i:
-                a_x += (M[j]*(R[i][0]-R[j][0]))/(abs(R[i][0]-R[j][0])**3)
-                a_y += (M[j]*(R[i][1]-R[j][1]))/(abs(R[i][1]-R[j][1])**3)
+                a_x += (M[i]*(R[j][0]-R[i][0]))/(abs(R[j][0]-R[i][0])**3)
+                a_y += (M[i]*(R[j][1]-R[i][1]))/(abs(R[j][1]-R[i][1])**3)
         A[j] = [-G*a_x, -G*a_y]
-    V = V + A*dt
-    R = R + V*dt/2
-    for i in R:
-        x = i[0]
-        y = i[1]
-        P_x.append(x)
-        P_y.append(y)
+    V[j] = A[j]*dt
+    R[j] = V[j]*dt/2
     time = time + dt
-
-
-for i in range(int(len(P_x)/5)):
-    plt.xlim([min(P_x), max(P_x)])
-    plt.ylim([min(P_y), max(P_y)])
-    x = P_x[i:i+5]
-    y = P_y[i:i+5]
-    plt.plot(x, y,'bo',)
-    plt.pause(0.1)
+    plt.xlim([-8560617435.081961, 35241756353.320004])
+    plt.ylim([-301629138332.50128, 7836989936.12])
+    plt.plot(R, 'bo')
+    plt.pause(1)
     plt.clf()
-
-
 plt.show()
-
-
-
 
