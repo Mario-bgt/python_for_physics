@@ -2,9 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from numpy import sin, cos, pi
 
-h = 6
+h = 24
 year = 365
-starting_day = 100
+starting_day = 250
 
 
 def R_x(phi):

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 N = 5
 c = 299792458
 G = 6.67428e-11
-M = N * [0]
+M = np.zeros(shape=(N, 1))
 R = np.zeros(shape=(N, 2))
 V = 0 * R
 A = 0 * R
@@ -38,7 +38,7 @@ def pot(pot):
 
 
 t_max = 36000*24*2
-dt = 1800
+dt = 300
 time = 0
 
 while time < t_max:
@@ -63,9 +63,8 @@ while time < t_max:
 for i in range(int(len(P_x)/5)):
     plt.xlim([min(P_x), max(P_x)])
     plt.ylim([min(P_y), max(P_y)])
-    x = P_x[i:i+5]
-    y = P_y[i:i+5]
-    plt.plot(x, y,'bo',)
+    for j in range(5):
+        plt.plot(P_x[i+j], P_y[i+j],'bo', markersize=2)
     plt.title('Zeit in Stunden: ' + str(i*5*1800/3600))
     plt.pause(0.1)
     plt.clf()

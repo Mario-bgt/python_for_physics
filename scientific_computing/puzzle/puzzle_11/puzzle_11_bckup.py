@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 from numpy import sin, cos, arccos
 
 
-r = 123
-p_phi = 9.01
+r = 7
+p_phi = (r ** (3 / 2)) / np.sqrt(r - 2)
 
 H_0 = [
     r,  # r
@@ -14,7 +14,7 @@ H_0 = [
     p_phi,  # p_phi
 ]
 
-T = np.linspace(0, 8571, 85710)
+T = np.linspace(0, 360, 3000)
 
 
 def H(H, t):
@@ -35,8 +35,7 @@ for i in sol:
     res = i[1] - arccos(r / i[0])
     x.append(res)
 
-
-print(sol[85709][1])
+print(2 / r)
 plt.plot(T, x)
 plt.title('Near a black hole')
 plt.xlabel('Time')
