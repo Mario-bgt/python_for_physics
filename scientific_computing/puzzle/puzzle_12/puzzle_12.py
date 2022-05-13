@@ -59,7 +59,7 @@ for i in range(year):
         i -= (starting_day*365)/year
     for j in range(h):
         plt.imshow(img, extent=(-180, 180, -90, 90))
-        plt.contourf(plot(i, j), cmap='coolwarm', extent=(-180, 180, -90, 90), alpha=0.6, )
+        plt.contourf(plot(i, j), cmap='magma', extent=(-180, 180, -90, 90), alpha=0.6, )
         plt.yticks(np.arange(-90, 91, step=15))
         plt.xticks(np.arange(-180, 181, step=15))
         plt.pause(0.1)

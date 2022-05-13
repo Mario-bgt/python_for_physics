@@ -13,7 +13,7 @@ gamma = (omega**2)/(ohm**2)
 
 
 v_phi = [0]
-v_tau=[0]
+v_tau = [0]
 tau_max = 30
 
 
