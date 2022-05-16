@@ -49,14 +49,12 @@ while time < t_max:
 
 P_x_f = np.array(P_x)
 P_y_f = np.array(P_y)
+fig, ax = plt.subplots()
 
-plt.plot(P_x_f, P_y_f)
-plt.show()
+img = plt.imread('img.jpg')
+ax.imshow(img, extent=[-200, 200, -200, 200])
 
-
-'''
 for i in range(len(P_x)):
-    plt.plot(P_x_f[i], P_y_f[i], 'yo', markersize=1)
+    plt.plot(P_x_f[i*5], P_y_f[i*5], 'yo', markersize=1)
     plt.pause(0.01)
     plt.gcf()
-'''

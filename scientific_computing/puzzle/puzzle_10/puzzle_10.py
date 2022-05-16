@@ -52,6 +52,6 @@ P_y_f = np.array(P_y)
 
 
 for i in range(len(P_x)):
-    plt.plot(P_x_f[i], P_y_f[i], 'yo', markersize=1)
+    plt.plot(P_x_f[i*5], P_y_f[i*5], 'yo', markersize=1)
     plt.pause(0.01)
     plt.gcf()

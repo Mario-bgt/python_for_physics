@@ -4,7 +4,7 @@ from numpy import sin, cos, pi
 
 h = 24
 year = 365
-starting_day = 250
+starting_day = 50
 
 
 def R_x(phi):
@@ -57,12 +57,13 @@ for i in range(year):
         i += ((365-starting_day)*365)/year
     else:
         i -= (starting_day*365)/year
+    print(i)
     for j in range(h):
         plt.imshow(img, extent=(-180, 180, -90, 90))
         plt.contourf(plot(i, j), cmap='magma', extent=(-180, 180, -90, 90), alpha=0.6, )
         plt.yticks(np.arange(-90, 91, step=15))
         plt.xticks(np.arange(-180, 181, step=15))
-        plt.pause(0.1)
+        plt.pause(0.01)
         plt.clf()
 plt.show()
 
