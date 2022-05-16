@@ -1,10 +1,11 @@
 import numpy as np
 
-N = 3
+N = 7
 R = np.zeros((N ** 2, N ** 2))
 np.fill_diagonal(R, 4)
 b = np.zeros((N ** 2, 1))
-b.fill(1)
+b[0][0] = 1
+b[N**2-1][0] = -1
 
 
 def solve_lineqs(A, b):
@@ -22,7 +23,6 @@ def neighbour(x, y):
     return (x - 1, y), (x + 1, y), (x, y + 1), (x, y - 1)
 
 
-l = []
 for i in range(N):
     R[i * N][i * N + N - 1] = -1
     R[i * N + N - 1][i * N] = -1
@@ -33,6 +33,5 @@ for i in range(N):
             if N > k[0] > -1 and N > k[1] > -1:
                 R[dd(i, j)][dd(k[0], k[1])] = -1
 
-
-I_tot = np.sum(solve_lineqs(R,b))
-print(1/I_tot)
+sol = solve_lineqs(R, b)
+print(np.linalg.norm(sol))
