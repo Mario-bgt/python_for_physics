@@ -41,6 +41,11 @@ def daylight(latitude, longitude, date, time):
     return fin
 
 
+'''
+x und y sind vertauscht!!
+'''
+
+
 def plot(date, time):
     y = np.linspace(-pi, pi, 180)
     x = np.linspace(-pi / 2, pi / 2, 180)
