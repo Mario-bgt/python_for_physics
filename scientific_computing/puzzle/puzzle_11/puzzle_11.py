@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt
-from numpy import sin, cos, arccos
+from numpy import arccos
 
 
 r = 123
@@ -38,7 +38,7 @@ for i in sol:
 
 
 print(sol[85709][1])
-plt.plot(T, x)
+plt.plot(sol)
 plt.title('Near a black hole')
 plt.xlabel('Time')
 plt.ylabel('phi-arccos(r_{init}/r)')

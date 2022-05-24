@@ -17,6 +17,11 @@ for j in yerrtemp:
     yerr.append(j*0.1)
 
 
+fit, c = np.polyfit(x, y, 1, cov=True)
+y_fit = np.polyval(fit, x)
+plt.plot(x, y_fit, 'b+')
+
+
 plt.errorbar(x=x, y=y, xerr=xerr, yerr=yerr, fmt='.k', elinewidth=0.5, markersize=2.5, capsize=1, color="black",
              label=r'$values$')
 plt.ylabel(r'$magnetic\:field\:B$')
