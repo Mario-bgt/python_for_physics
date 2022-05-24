@@ -10,12 +10,14 @@ def tanplus(tan_1, tan_2):
 
 
 tan_alpha = Fraction(1, 8)
-N = 6
-tan_2alpha = tanplus(tan_alpha, tan_alpha)
-tan_4alpha = tanplus(tan_2alpha, tan_2alpha)
-tan_6alpha = tanplus(tan_4alpha, tan_4alpha)
-tan_beta = tanplus(1, -1*tan_4alpha)
+N = 8
+tan_Nalpha = tan_alpha
+for i in range(int(N/2)):
+    tan_Nalpha = tanplus(tan_Nalpha, tan_Nalpha)
+
+tan_beta = tanplus(1, -1*tan_Nalpha)
 print(N, tan_alpha, tan_beta)
+print(frac_to_string(4*(N*arctan(tan_alpha)+arctan(tan_beta))))
 end = time.time()
 print('It took', (end - start), 'seconds to execute.')
 

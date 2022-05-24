@@ -1,23 +1,21 @@
 import numpy as np
 
-x = np.asarray([5, 6, 6, 7, 9, 7, 2, 2])
-
 
 def G_four(x):
     if len(x) == 1:
         return x
     N = len(x)
+    lyst = np.arange(N//2)
+    res = x*0
     x_even = x[::2]
     x_odd = x[1::2]
-    print(x_even, type(x_even))
-    omega_N = np.exp(-2j * np.pi/N)
-    print(omega_N, type(omega_N))
-    a_p = []
-    s_p = []
-    for i in range(N // 2):
-        a_p.append(G_four(x_even) + (omega_N**i)*G_four(x_odd))
-        s_p.append(G_four(x_even) - (omega_N**i)*G_four(x_odd))
-    return [a_p, s_p]
+    omega_N = np.exp(-2j * np.pi*lyst/N)
+    res[:N//2] = G_four(x_even) + omega_N*G_four(x_odd)
+    res[N//2:] = G_four(x_even) - omega_N*G_four(x_odd)
+    return res
 
 
-print(G_four(np.array([5, 6, 6, 7, 9, 7, 2, 2])))
+x = [5, 6, 6, 7, 9, 7, 2, 2]
+sol = G_four(x)
+print(sol[-1])
+print(np.fft.fft(x))
