@@ -18,4 +18,4 @@ def G_four(x):
 x = [5, 6, 6, 7, 9, 7, 2, 2]
 sol = G_four(x)
 print(sol[-1])
-print(np.fft.fft(x))
+print(np.fft.fft(x)[-1])
