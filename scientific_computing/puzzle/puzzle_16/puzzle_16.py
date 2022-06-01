@@ -12,21 +12,23 @@ def psi_0(x):
 
 def psi_n(x, n):
     if n == 1:
+        return psi_0(x)
+    if n == 2:
         return np.sqrt(2/n)*x*psi_0(x)
     return np.sqrt(2/n)*x*psi_n(x, n-1)-np.sqrt((n-1)/n)*psi_n(x, n-2)
 
 
 N = 2**9
 n = np.arange(N)-N//2
-dt = 0.01
+dt = 0.001
 dx = (2*np.pi/N)**.5
 t_max = 300
-x = np.arange((N)-N//2) * dx
+x = np.linspace(-np.pi, np.pi, N//2)
 t = 0
 dk = (2 * np.pi) / (N * dx)
-k =  np.arange((N)-N//2) * dk
-psy = psi_0(x)
-while t < t_max:
+k = np.arange(N - N // 2) * dk
+psy = psi_n(x, 2)
+while True:
     fft = np.fft.fftshift(np.fft.fft(np.fft.fftshift(psy)))
     fft = fft*np.exp(-1j*k**2*(dt/2))
     ift = np.fft.fftshift(np.fft.ifft(np.fft.fftshift(fft)))
@@ -39,7 +41,6 @@ while t < t_max:
     imag = []
     prob = []
     for i in psy:
-        print(i, i.real, i.imag)
         real.append(i.real)
         imag.append(i.imag)
         prob.append(np.abs(i)**2)
