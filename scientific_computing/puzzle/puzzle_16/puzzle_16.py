@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+import numpy.fft as npf
 
 def V(x):
     return (1/2)*x**2
@@ -16,33 +16,39 @@ def psi_n(x, n):
     return np.sqrt(2/n)*x*psi_n(x, n-1)-np.sqrt((n-1)/n)*psi_n(x, n-2)
 
 
-N = 20
-n = np.arange(N)-N/2
+N = 2**9
+n = np.arange(N)-N//2
 dt = 0.01
-dx = 0.01
+dx = (2*np.pi/N)**.5
 t_max = 300
-x = np.linspace(-150, 150, 301)
+x = np.arange((N)-N//2) * dx
 t = 0
+dk = (2 * np.pi) / (N * dx)
+k =  np.arange((N)-N//2) * dk
+psy = psi_0(x)
 while t < t_max:
-    psy_n = []
-    for x_n in x:
-        fft = np.fft.fft(n)
-        k = (2*np.pi)/(N*dx)
-        fft = fft*np.exp(-complex(0, 1)*k**2*(dt/2))
-        ift = np.fft.ifft(fft)
-        ift = ift*np.exp(-complex(0, 1)*V(x_n)*dt)
-        fft = np.fft.fft(ift)
-        fft = fft*np.exp(-complex(0, 1)*k**2*(dt/2))
-        ift = np.fft.ifft(fft)
-        real = []
-        imag = []
-        for i in ift:
-            print(i, i.real, i.imag)
-            real.append(i.real)
-            imag.append(i.imag)
-        plt.plot(real)
-        plt.plot(imag)
-        plt.pause(0.1)
+    fft = np.fft.fftshift(np.fft.fft(np.fft.fftshift(psy)))
+    fft = fft*np.exp(-1j*k**2*(dt/2))
+    ift = np.fft.fftshift(np.fft.ifft(np.fft.fftshift(fft)))
+    for i, x_n in enumerate(x):
+        ift[i] = ift[i]*np.exp(-1j*V(x_n)*dt)
+    fft = np.fft.fftshift(np.fft.fft(np.fft.fftshift(ift)))
+    fft = fft*np.exp(-1j*k**2*(dt/2))
+    psy = np.fft.fftshift(np.fft.ifft(np.fft.fftshift(fft)))
+    real = []
+    imag = []
+    prob = []
+    for i in psy:
+        print(i, i.real, i.imag)
+        real.append(i.real)
+        imag.append(i.imag)
+        prob.append(np.abs(i)**2)
+    plt.ylim(-1, 1)
+    plt.plot(prob)
+    plt.plot(real)
+    plt.plot(imag)
+    plt.pause(0.1)
+    plt.gca().clear()
     t += dt
 
 
