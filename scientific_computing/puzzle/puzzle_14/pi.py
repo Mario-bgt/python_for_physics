@@ -4,7 +4,7 @@ from fractions import Fraction
 def arctan(frac):
     t_old = res = x = frac
     k = 1
-    eps = Fraction(1, 10**1000)
+    eps = Fraction(1, 10**100)
     while True:
         t = (-x ** 2) * t_old
         res = res + Fraction(t, 2 * k + 1)

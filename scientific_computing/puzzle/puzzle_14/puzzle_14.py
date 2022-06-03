@@ -13,9 +13,9 @@ def tann(tan_1, tan_2, n, check=2):
 
 
 N = 8
-a = 9
+a = 4
 tan_alpha = Fraction(1, a)
 tan_Nalpha = tann(tan_alpha, tan_alpha, N)
 tan_beta = (1 - tan_Nalpha) / (1 + tan_Nalpha)
 print(N, tan_alpha, tan_beta)
-print(frac_to_string(4 * (N * arctan(tan_alpha) + arctan(tan_beta))))
+print(4 * (N * np.arctan(float(tan_alpha)) + np.arctan(float(tan_beta))))
