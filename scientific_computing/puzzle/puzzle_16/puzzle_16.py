@@ -22,7 +22,7 @@ def psi_n(x, n):
 N = 2**9
 dt = 0.001
 dx = (2*np.pi/N)**.5
-x = np.linspace(-np.pi, np.pi, N//2)
+x = np.linspace(-5*np.pi, 5*np.pi, N//2)
 dk = (2 * np.pi) / (N * dx)
 k = np.arange(N - N // 2) * dk
 function = psi_n(x, 3)
