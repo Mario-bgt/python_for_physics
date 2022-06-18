@@ -53,7 +53,6 @@ fig, ax = plt.subplots()
 
 img = plt.imread('img.jpg')
 ax.imshow(img, extent=[-200, 200, -200, 200])
-
 for i in range(len(P_x)):
     plt.plot(P_x_f[i*5], P_y_f[i*5], 'yo', markersize=1)
     plt.pause(0.01)

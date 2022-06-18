@@ -1,0 +1,20 @@
+tetrachloroethene
+1,2-dichloroethane
+1,3-dichloropropane
+dichloromethane
+1,2,4-trimethylbenzene
+1,1,2,2-tetrachloroethane
+2,4-dichloroacetophenone
+4-methyl-2-pentanone
+ethyl acetate
+cyclohexanone
+2,4,6-trimethylphenol
+3-chloronitrobenzene
+4-ethylphenol
+2,4-dimethylphenol
+4-nitrotoluene
+2-chloro-4-nitroaniline
+2-chloroaniline
+pentafluoroaniline
+4-methylaniline
+4-ethylaniline

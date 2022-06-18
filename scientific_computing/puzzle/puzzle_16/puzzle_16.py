@@ -26,7 +26,7 @@ dx = (2 * np.pi / N) ** .5
 dk = (2 * np.pi) / (N * dx)
 x = (np.arange(N) - N // 2) * dx
 k = (np.arange(N) - N // 2) * dk
-function = psi_n(x, 2)+psi_n(x,1)
+function = psi_n(x, 2)
 plt.plot(function)
 plt.show()
 while True:

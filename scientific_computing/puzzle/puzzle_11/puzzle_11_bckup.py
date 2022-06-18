@@ -38,6 +38,6 @@ for i in sol:
 print(2 / r)
 plt.plot(T, x)
 plt.title('Near a black hole')
-plt.xlabel('Time')
-plt.ylabel('phi-arccos(r_{init}/r)')
+plt.xlabel('x pos')
+plt.ylabel('y pos)')
 plt.show()

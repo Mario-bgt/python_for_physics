@@ -49,9 +49,14 @@ while time < t_max:
 
 P_x_f = np.array(P_x)
 P_y_f = np.array(P_y)
+fig, ax = plt.subplots()
 
-
+img = plt.imread('img.jpg')
+ax.imshow(img, extent=[-200, 200, -200, 200])
+plt.plot(P_x_f, P_y_f)
+plt.show()
 for i in range(len(P_x)):
-    plt.plot(P_x_f[i*5], P_y_f[i*5], 'ro', markersize=1)
+    plt.plot(P_x_f[i*5], P_y_f[i*5], 'y.', markersize=1)
+    plt.ylim(-200, 200)
+    plt.xlim(-200, 200)
     plt.pause(0.01)
-    plt.gcf()

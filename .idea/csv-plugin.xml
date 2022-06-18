@@ -38,6 +38,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\scientific_computing\tox.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="&#9;" />
+            </Attribute>
+          </value>
+        </entry>
       </map>
     </option>
   </component>

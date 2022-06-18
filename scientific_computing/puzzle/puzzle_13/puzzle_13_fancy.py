@@ -46,7 +46,7 @@ for N in range(5, 100):
     solution.append(2*(sol[0]-sol[dd(1, 2)]))
     end = time.time()
     plt.plot(solution)
-    plt.title(end-start)
+    plt.title('Time to execute: '+ str(end-start))
     plt.pause(end-start + 1)
 
 print(4/np.pi - 1/2)

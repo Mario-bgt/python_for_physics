@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def fouriertransformator(x):
@@ -19,3 +20,11 @@ x = [5, 6, 6, 7, 9, 7, 2, 2]
 sol = fouriertransformator(x)
 print(sol[-1])
 print(np.fft.fft(x)[-1])
+
+sol = np.array(sol)
+
+plt.plot(sol.real, 'r+')
+plt.plot(sol.imag, 'g+')
+plt.plot(x, 'b+')
+plt.plot(abs(sol), 'y.')
+plt.show()
