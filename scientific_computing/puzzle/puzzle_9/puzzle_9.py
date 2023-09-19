@@ -8,9 +8,8 @@ ohm = 10  # angular speed of the wheel
 phi = [-np.pi / 4]  # angle of pendulum
 omega = np.sqrt(g / l)  # natural frequency of the pendulum
 tau = [0]  # location of the wheel
-lama = L/l
-gamma = (omega**2)/(ohm**2)
-
+lama = L / l
+gamma = (omega ** 2) / (ohm ** 2)
 
 v_phi = [0]
 v_tau = [0]
@@ -19,6 +18,7 @@ tau_max = 30
 
 def a(phi, tau):
     return -gamma * np.sin(phi) - lama * np.sin(phi - tau)
+
 
 def v(phi, tau):
     return 0
@@ -32,12 +32,11 @@ while tau[-1] < tau_max - dtau / 2:
     tau.append(tau[-1] + dtau)
     phi.append(phi[-1] + dv_phi)
 
+mp_x = L * np.sin(tau)
+mp_y = -L * np.cos(tau)
 
-mp_x = L*np.sin(tau)
-mp_y = -L*np.cos(tau)
-
-pm_x = L*np.sin(tau) + l*np.sin(phi)
-pm_y = -L*np.cos(tau)-l*np.cos(phi)
+pm_x = L * np.sin(tau) + l * np.sin(phi)
+pm_y = -L * np.cos(tau) - l * np.cos(phi)
 
 fig = plt.figure()
 
@@ -46,21 +45,21 @@ for t in range(1, len(tau)):
     y1 = pm_y[:t]
     x2 = mp_x[:t]
     y2 = mp_y[:t]
-    plt.subplot(2,2,1)
+    plt.subplot(2, 2, 1)
     plt.gca().clear()
-    plt.plot(x1,y1)
-    plt.plot(pm_x[t-1:t], pm_y[t-1:t], 'ro')
-    plt.title('Position of pendulum mass at the time ' + str(t/10))
-    plt.subplot(2,2,2)
+    plt.plot(x1, y1)
+    plt.plot(pm_x[t - 1:t], pm_y[t - 1:t], 'ro')
+    plt.title('Position of pendulum mass at the time ' + str(t / 10))
+    plt.subplot(2, 2, 2)
     plt.gca().clear()
     plt.plot(0, 0, 'yo')
-    plt.plot(x2,y2)
+    plt.plot(x2, y2)
     plt.plot(mp_x[t - 1:t], mp_y[t - 1:t], 'ro')
-    plt.title('Position of the mount point ' + str(t/10))
+    plt.title('Position of the mount point ' + str(t / 10))
     plt.subplot(2, 2, 3)
     plt.gca().clear()
     plt.plot(0, 0, 'yo')
-    plt.plot(x2,y2)
+    plt.plot(x2, y2)
     plt.plot(mp_x[t - 1:t], mp_y[t - 1:t], 'ro')
     plt.plot(x1, y1)
     plt.plot(pm_x[t - 1:t], pm_y[t - 1:t], 'ro')
@@ -68,11 +67,11 @@ for t in range(1, len(tau)):
     plt.subplot(2, 2, 4)
     plt.gca().clear()
     plt.plot(0, 0, 'yo')
-    plt.plot(x2,y2)
+    plt.plot(x2, y2)
     plt.plot(mp_x[t - 1:t], mp_y[t - 1:t], 'ro')
     plt.plot(x1, y1)
     plt.plot(pm_x[t - 1:t], pm_y[t - 1:t], 'ro')
-    plt.plot([mp_x[t - 1:t],pm_x[t - 1:t]], [mp_y[t - 1:t],pm_y[t - 1:t]])
+    plt.plot([mp_x[t - 1:t], pm_x[t - 1:t]], [mp_y[t - 1:t], pm_y[t - 1:t]])
     plt.title('Both functions in one at ' + str(t / 10) + ' but more fancy')
     plt.pause(0.001)
 plt.show()
